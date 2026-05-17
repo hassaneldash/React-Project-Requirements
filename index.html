@@ -1,0 +1,794 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>React Project - Medical Booking App</title>
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      :root {
+        /* Elegant Midnight Slate & Gold Theme */
+        --bg: #0f172a;
+        --surface: #1e293b;
+        --card: #334155;
+        --border: #475569;
+        --text: #cbd5e1;
+        --heading: #f8fafc;
+        --primary: #fbbf24; /* Elegant Gold */
+        --secondary: #38bdf8; /* React Cyan */
+        --tertiary: #a78bfa; /* Soft Purple */
+        --green: #34d399; /* Emerald */
+        --red: #fb7185; /* Soft Red */
+
+        --code-bg: #0b1120;
+        --code-str: #a5d6ff;
+        --code-kw: #c678dd;
+        --code-fn: #61afef;
+        --code-num: #d19a66;
+        --code-cmt: #8b949e;
+        --code-type: #e5c07b;
+
+        --radius: 14px;
+        --font: 'Inter', system-ui, -apple-system, sans-serif;
+        --mono: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+      }
+      html {
+        scroll-behavior: smooth;
+        font-size: 16px;
+      }
+      body {
+        font-family: var(--font);
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.7;
+      }
+      code {
+        font-family: var(--mono);
+        font-size: 0.88rem;
+      }
+      p code,
+      li code,
+      td code {
+        background: var(--card);
+        padding: 2px 7px;
+        border-radius: 6px;
+        font-size: 0.85em;
+        color: var(--primary);
+      }
+      h1 {
+        font-size: 2.2rem;
+        color: var(--heading);
+        font-weight: 800;
+        letter-spacing: -0.02em;
+      }
+      h2 {
+        font-size: 1.4rem;
+        color: var(--heading);
+        font-weight: 700;
+        margin-bottom: 0.4em;
+      }
+      h3 {
+        font-size: 1.05rem;
+        color: var(--primary);
+        font-weight: 600;
+        margin: 1.2em 0 0.4em;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      p {
+        margin-bottom: 0.6em;
+      }
+      ul,
+      ol {
+        padding-left: 1.4em;
+        margin-bottom: 0.8em;
+      }
+      li {
+        margin-bottom: 0.4em;
+      }
+      .container {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 30px 24px 80px;
+      }
+
+      /* Header */
+      .lab-header {
+        text-align: center;
+        padding: 50px 20px 40px;
+        background: linear-gradient(135deg, #020617 0%, var(--bg) 100%);
+        border-bottom: 2px solid var(--secondary);
+        margin-bottom: 40px;
+        border-radius: 0 0 24px 24px;
+      }
+      .lab-header h1 {
+        background: linear-gradient(135deg, var(--heading), var(--text));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 0.2em;
+      }
+      .lab-header p {
+        color: var(--secondary);
+        font-size: 1.15rem;
+        font-weight: 500;
+      }
+      .lab-badge {
+        display: inline-block;
+        background: var(--secondary);
+        color: #0f172a;
+        padding: 5px 18px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        margin-bottom: 16px;
+        letter-spacing: 0.02em;
+      }
+      .deadline-badge {
+        display: inline-block;
+        background: rgba(251, 191, 36, 0.15);
+        color: var(--primary);
+        border: 1px solid var(--primary);
+        padding: 5px 18px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-bottom: 16px;
+        margin-left: 10px;
+      }
+
+      /* Section cards */
+      .section-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 24px 28px;
+        margin-bottom: 24px;
+        box-shadow:
+          0 4px 6px -1px rgba(0, 0, 0, 0.1),
+          0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        transition: transform 0.2s ease;
+      }
+      .section-card:hover {
+        transform: translateY(-2px);
+      }
+      .section-card h2 {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .section-number {
+        background: var(--secondary);
+        color: #0f172a;
+        width: 30px;
+        height: 30px;
+        border-radius: 8px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.9rem;
+        font-weight: 800;
+        flex-shrink: 0;
+      }
+
+      /* Concept tags */
+      .concept-tag {
+        display: inline-block;
+        padding: 3px 12px;
+        border-radius: 20px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        margin: 0;
+      }
+      .concept-tag.api {
+        background: rgba(56, 189, 248, 0.15);
+        color: var(--secondary);
+      }
+      .concept-tag.link {
+        background: rgba(56, 189, 248, 0.15);
+        color: var(--secondary);
+        text-transform: lowercase;
+        cursor: pointer;
+      }
+      .concept-tag.state {
+        background: rgba(251, 191, 36, 0.15);
+        color: var(--primary);
+      }
+      .concept-tag.ui {
+        background: rgba(167, 139, 250, 0.15);
+        color: var(--tertiary);
+      }
+      .concept-tag.routing {
+        background: rgba(52, 211, 153, 0.15);
+        color: var(--green);
+      }
+
+      /* Boxes */
+      .hint-box {
+        background: linear-gradient(135deg, rgba(52, 211, 153, 0.1), var(--surface));
+        border-left: 4px solid var(--green);
+        padding: 14px 18px;
+        border-radius: 0 var(--radius) var(--radius) 0;
+        margin-top: 0.8em;
+        font-size: 0.9rem;
+      }
+      .hint-box strong {
+        color: var(--green);
+      }
+
+      .warn-box {
+        background: linear-gradient(135deg, rgba(251, 113, 133, 0.1), var(--surface));
+        border-left: 4px solid var(--red);
+        padding: 14px 18px;
+        border-radius: 0 var(--radius) var(--radius) 0;
+        margin-top: 0.8em;
+        font-size: 0.9rem;
+      }
+      .warn-box strong {
+        color: var(--red);
+      }
+
+      .info-box {
+        background: linear-gradient(135deg, rgba(56, 189, 248, 0.1), var(--surface));
+        border-left: 4px solid var(--secondary);
+        padding: 14px 18px;
+        border-radius: 0 var(--radius) var(--radius) 0;
+        margin-top: 0.8em;
+        font-size: 0.9rem;
+      }
+      .info-box strong {
+        color: var(--secondary);
+      }
+
+      /* Tables */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 1.2em;
+        font-size: 0.9rem;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      th {
+        background: var(--card);
+        color: var(--heading);
+        padding: 12px 16px;
+        text-align: left;
+        font-weight: 600;
+        border-bottom: 2px solid var(--border);
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+      td {
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--border);
+      }
+      tr:last-child td {
+        border-bottom: none;
+      }
+      tr:hover {
+        background: rgba(56, 189, 248, 0.05);
+      }
+
+      /* Endpoint method badge */
+      .method {
+        display: inline-block;
+        padding: 3px 10px;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        font-family: var(--mono);
+        min-width: 55px;
+        text-align: center;
+      }
+      .method.get {
+        background: rgba(52, 211, 153, 0.15);
+        color: var(--green);
+      }
+      .method.post {
+        background: rgba(251, 191, 36, 0.15);
+        color: var(--primary);
+      }
+      .method.put {
+        background: rgba(56, 189, 248, 0.15);
+        color: var(--secondary);
+      }
+      .method.delete {
+        background: rgba(251, 113, 133, 0.15);
+        color: var(--red);
+      }
+
+      /* Team card */
+      .team-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 16px;
+        margin: 1.2em 0;
+      }
+      .team-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 20px;
+        text-align: center;
+        transition: all 0.2s ease;
+      }
+      .team-card:hover {
+        border-color: var(--secondary);
+        background: var(--surface);
+      }
+      .team-card .member-num {
+        background: var(--secondary);
+        color: #0f172a;
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        font-weight: 800;
+        margin-bottom: 12px;
+        transform: rotate(-3deg);
+      }
+      .team-card .member-num.m2 {
+        background: var(--primary);
+      }
+      .team-card .member-num.m3 {
+        background: var(--tertiary);
+      }
+      .team-card .member-num.m4 {
+        background: var(--green);
+      }
+      .team-card h3 {
+        margin: 0 0 8px;
+        text-transform: none;
+        color: var(--heading);
+        font-size: 1rem;
+        letter-spacing: normal;
+      }
+      .team-card ul {
+        text-align: left;
+        padding-left: 1.4em;
+        margin: 12px 0 0;
+        font-size: 0.85rem;
+        color: var(--text);
+      }
+      .team-card ul li {
+        margin-bottom: 6px;
+      }
+
+      /* Section divider */
+      .section-divider {
+        background: linear-gradient(90deg, var(--surface), transparent);
+        border-left: 4px solid var(--primary);
+        border-radius: 6px;
+        padding: 12px 20px;
+        margin: 40px 0 24px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+      .section-divider .section-label {
+        background: var(--primary);
+        color: #0f172a;
+        padding: 4px 16px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 800;
+        white-space: nowrap;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .section-divider p {
+        margin: 0;
+        font-size: 1rem;
+        color: var(--heading);
+        font-weight: 600;
+      }
+
+      /* Tips */
+      .tip-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-left: 4px solid var(--tertiary);
+        border-radius: 8px;
+        padding: 14px 20px;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+        font-size: 0.9rem;
+      }
+      .tip-icon {
+        font-size: 1.2rem;
+        flex-shrink: 0;
+        margin-top: 2px;
+      }
+
+      /* References block */
+      .ref-block a {
+        color: var(--secondary);
+        text-decoration: none;
+        word-break: break-all;
+      }
+      .ref-block a:hover {
+        text-decoration: underline;
+      }
+
+      @media (max-width: 768px) {
+        h1 {
+          font-size: 1.8rem;
+        }
+        .container {
+          padding: 20px 16px 60px;
+        }
+        .section-card {
+          padding: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="lab-header">
+      <span class="lab-badge">React Project</span>
+      <span class="deadline-badge">&#9200; Deadline: 7 days</span>
+      <h1>Medical Booking App</h1>
+      <p>React + Laravel/Django Backend + Material UI/TailwindCSS</p>
+    </div>
+
+    <div class="container">
+      <div class="section-card">
+        <h2><span class="section-number">&#9733;</span> Project Overview</h2>
+        <p>
+          The application is a role-based medical appointment booking system. Patients can browse doctors and book slots, doctors can manage their availability and view schedules, and administrators have full oversight of the platform's users and configurations. You will utilize the React ecosystem libraries and best practices to deliver these requirements.
+        </p>
+
+        <div class="info-box">
+          <strong>UI Framework:</strong> You must build the UI using Material UI or any other UI library except Bootstrap (Don't use Bootstrap). All routing should utilize Role-based routing using React Router.
+        </div>
+      </div>
+
+      <div class="section-divider">
+        <span class="section-label">Routes</span>
+        <p>Required Pages</p>
+      </div>
+
+      <div class="section-card">
+        <p>
+          Create a React app with the following pages using React Router, including
+          handling a 404 Not Found page.
+        </p>
+        <ul>
+          <li><strong>Doctor Search</strong> (Main page with specialty/name filters)</li>
+          <li><strong>Doctor Profile & Booking</strong> (View availability and book slot)</li>
+          <li><strong>Patient Dashboard</strong> (View, cancel, or reschedule appointments)</li>
+          <li><strong>Doctor Dashboard</strong> (Set availability, view upcoming/past appointments)</li>
+          <li><strong>Admin Dashboard</strong> (System management, approve/block users)</li>
+          <li><strong>Login</strong> (Authentication for all roles)</li>
+          <li><strong>Register</strong> (Patients and Doctors can register)</li>
+          <li><strong>Profile Edit</strong> (Logged-in user info)</li>
+          <li><strong>404 Not Found</strong> (Catch-all for invalid URLs)</li>
+        </ul>
+      </div>
+
+      <div class="section-divider">
+        <span class="section-label">Team</span>
+        <p>Suggested Work Division</p>
+      </div>
+
+      <div class="team-grid">
+        <div class="team-card">
+          <div class="member-num">1</div>
+          <h3>Data &amp; Auth Lead</h3>
+          <ul>
+            <li>JWT Token-based authentication</li>
+            <li>Login &amp; Register pages</li>
+            <li>Global state setup (Context/Redux Toolkit)</li>
+            <li>Role-Based Access Control logic</li>
+          </ul>
+        </div>
+        <div class="team-card">
+          <div class="member-num m2">2</div>
+          <h3>Patient UX Lead</h3>
+          <ul>
+            <li>Doctor search, sorting & filtering</li>
+            <li>Appointment booking logic</li>
+            <li>Real-time availability validation</li>
+            <li>Pagination implementation</li>
+          </ul>
+        </div>
+        <div class="team-card">
+          <div class="member-num m3">3</div>
+          <h3>Doctor & Admin Lead</h3>
+          <ul>
+            <li>Doctor availability scheduling</li>
+            <li>Admin Dashboard (Approve/Block)</li>
+            <li>CRUD on system configs</li>
+            <li>React Router (Lazy Loading)</li>
+          </ul>
+        </div>
+        <div class="team-card">
+          <div class="member-num m4">4</div>
+          <h3>UI/UX Lead</h3>
+          <ul>
+            <li>Material UI/Tailwind implementation</li>
+            <li>Dark Mode & Dynamic Titles</li>
+            <li>i18n (Language LTR/RTL)</li>
+            <li>Loading Skeletons & Global Toasts</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section-divider">
+        <span class="section-label">Features</span>
+        <p>Core Functional Requirements</p>
+      </div>
+
+      <div class="section-card">
+        <h2>
+          <span class="section-number">1</span> Patient Capabilities
+          <span class="concept-tag api">API</span>
+          <span class="concept-tag ui">UI</span>
+        </h2>
+        <ul>
+          <li>
+            <strong>Discovery:</strong> View list of available doctors with functional filters for specialty and name.
+          </li>
+          <li>
+            <strong>Booking:</strong> View a doctor's availability and book an appointment (date/time slot).
+          </li>
+          <li>
+            <strong>Management:</strong> View, cancel, or reschedule their appointments. Edit personal profile.
+          </li>
+          <li>
+            <strong>Validation:</strong> Ensure real-time validation of availability to completely avoid double booking.
+          </li>
+          <li>
+            <strong><span class="concept-tag state">Bonus</span> Sorting:</strong> Sort doctors by rating, specialty, or availability using query parameters (e.g., <code>sort_by=rating</code>).
+          </li>
+          <li>
+            <strong><span class="concept-tag state">Bonus</span> Pagination:</strong> Paginate between doctor list pages and admin master lists by sending a query parameter (e.g., <code>page=2</code>).
+          </li>
+          <li>
+            <strong><span class="concept-tag state">Bonus</span> Search Debouncing:</strong> Implement a debounce utility (e.g., 500ms delay) on the search input to protect the backend API rate limits.
+          </li>
+        </ul>
+      </div>
+
+      <div class="section-card">
+        <h2>
+          <span class="section-number">2</span> Doctor & Admin Capabilities
+          <span class="concept-tag state">State</span>
+          <span class="concept-tag routing">Routing</span>
+        </h2>
+        <ul>
+          <li>
+            <strong>Doctor Scheduling:</strong> Set availability schedule (days/times).
+          </li>
+          <li>
+            <strong>Doctor Dashboard:</strong> View upcoming and past appointments. Manage profile (specialty, bio, contact). Optionally: mark appointment as approved or rejected, and can add notes.
+          </li>
+          <li>
+            <strong>Admin Moderation:</strong> View all users (doctors & patients). Approve or block doctors/patients.
+          </li>
+          <li>
+            <strong>Admin Config:</strong> CRUD on specialties, doctors, and other system configurations. View all appointments system-wide.
+          </li>
+        </ul>
+      </div>
+
+      <div class="section-card">
+        <h2>
+          <span class="section-number">3</span> UI Enhancements &amp; Auth
+          <span class="concept-tag ui">UI Components</span>
+        </h2>
+        <ul>
+          <li>
+            <strong>UI Components:</strong> Use Material UI or another UI library except bootstrap.
+          </li>
+          <li>
+            <strong>Authentication:</strong> Secure login/authentication handling (JWT) via Django Rest Framework + djangorestframework-simplejwt or Laravel equivalent.
+          </li>
+          <li>
+            <strong>State & Forms:</strong> Strict form validation and state management via Context API or Redux Toolkit.
+          </li>
+          <li>
+            <strong> Enhancements:</strong> Implement Dynamic Page Titles (updating the browser tab to match the view) and a Back to Top Button.
+          </li>
+          <li>
+            <strong> Notifications:</strong> Provide user feedback via a Snackbar/Toast library for successful bookings or errors.
+          </li>
+          <li>
+            <strong> Empty States &amp; Skeletons:</strong> Display Skeleton components while fetching doctor availability. Show a clear "Empty State" graphic if no appointments exist.
+          </li>
+        </ul>
+      </div>
+
+      <div class="section-card">
+        <h2>
+          <span class="section-number">4</span> Architecture &amp; Best Practices
+          <span class="concept-tag state">Architecture</span>
+        </h2>
+        <ul>
+          <li>
+            <strong>Role-Based Routing:</strong> Implement role-based routing using React Router to secure Patient, Doctor, and Admin views.
+          </li>
+          <li>
+            <strong> API Error Handling:</strong> Implement global or component-level error handling. Display user-friendly error messages (via Toasts) if fetching fails.
+          </li>
+          <li>
+            <strong> Dark Mode Toggle:</strong> Implement a functional dark mode switch for the medical platform.
+          </li>
+          <li>
+            <strong><span class="concept-tag state">Bonus</span> Custom Hooks:</strong> Create custom hooks or utility files (e.g., Axios instances) to separate backend API requests from UI components.
+          </li>
+          <li>
+            <strong><span class="concept-tag state">Bonus</span> i18n:</strong> Language dropdown (e.g., English, Arabic) changing the text and switching layout to RTL for Arabic.
+          </li>
+          <li>
+            <strong><span class="concept-tag state">Bonus</span> Lazy Loading:</strong> Use <code>React.lazy()</code> and <code>&lt;Suspense&gt;</code> to code-split page routes, ensuring the Admin Dashboard code is only loaded for Admins.
+          </li>
+        </ul>
+      </div>
+
+      <div class="section-divider">
+        <span class="section-label">Endpoints</span>
+        <p>Expected Backend API Reference</p>
+      </div>
+
+      <div class="section-card ref-block">
+        <table>
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Endpoint Purpose</th>
+              <th>Suggested URL Structure</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="method get">GET</span></td>
+              <td>Available Doctors List</td>
+              <td><code>/api/doctors?specialty={id}&sort_by={rating}&page={page}</code></td>
+            </tr>
+            <tr>
+              <td><span class="method get">GET</span></td>
+              <td>Doctor Availability</td>
+              <td><code>/api/doctors/{id}/availability</code></td>
+            </tr>
+            <tr>
+              <td><span class="method post">POST</span></td>
+              <td>Book Appointment</td>
+              <td><code>/api/appointments/book</code></td>
+            </tr>
+            <tr>
+              <td><span class="method get">GET</span></td>
+              <td>User Appointments</td>
+              <td><code>/api/appointments</code></td>
+            </tr>
+            <tr>
+              <td><span class="method put">PUT</span></td>
+              <td>Update Appointment Status</td>
+              <td><code>/api/appointments/{id}/status</code></td>
+            </tr>
+            <tr>
+              <td><span class="method get">GET</span></td>
+              <td>Admin: All Users</td>
+              <td><code>/api/admin/users</code></td>
+            </tr>
+            <tr>
+              <td><span class="method post">POST</span></td>
+              <td>Register (Patient/Doctor)</td>
+              <td><code>/api/auth/register</code></td>
+            </tr>
+            <tr>
+              <td><span class="method post">POST</span></td>
+              <td>Login (Obtain JWT)</td>
+              <td><code>/api/auth/login</code></td>
+            </tr>
+            <tr>
+              <td><span class="method get">GET</span></td>
+              <td>Profile Data</td>
+              <td><code>/api/auth/profile</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section-divider">
+        <span class="section-label">Delivery</span>
+        <p>Submission Guidelines</p>
+      </div>
+
+      <div class="section-card">
+        <h3>1. Timeline &amp; Estimate</h3>
+        <ul>
+          <li>
+            Provide an estimate sheet with features, initial estimates, and actual spent
+            time.
+          </li>
+          <li>Use the provided Google Sheet link (make a copy).</li>
+          <li>Maximum of <code>7 days</code> to complete and submit.</li>
+        </ul>
+
+        <h3>2. Version Control &amp; Hosting</h3>
+        <ul>
+          <li>Link project with GitHub, pushing commits per feature.</li>
+          <li>
+            Deliver the GitHub link and add <code>hassaneldash</code> to the repository.
+          </li>
+          <li>
+            Host using Cloudflare, Vercel, Netlify, or GitHub Pages and provide the live
+            link.
+          </li>
+        </ul>
+
+        <h3>3. Final Submission</h3>
+        <ul>
+          <li>Send everything to <code>hassanmeldash@gmail.com</code>.</li>
+          <li>
+            Email subject:
+            <code>ITI Menofia | OS46 | React Project | Medical App | Group No.?</code>
+          </li>
+          <li>
+            Record a comprehensive video walkthrough detailing your entire application.
+            Your final grade will be evaluated on functional completeness, the structural
+            quality of your code, and a consistent GitHub commit history.
+          </li>
+        </ul>
+      </div>
+
+      <div class="section-divider">
+        <span class="section-label">Tips</span>
+        <p>Developer Checklist</p>
+      </div>
+
+      <div class="tip-card">
+        <span class="tip-icon">&#128640;</span>
+        <div>
+          <strong>Component Reusability:</strong> Create reusable React components for doctor profile cards and appointment list items.
+        </div>
+      </div>
+      <div class="tip-card">
+        <span class="tip-icon">&#128225;</span>
+        <div>
+          <strong>Debounce API Calls:</strong> Don't spam the backend API. Ensure your debounce hook is working before testing doctor search extensively.
+        </div>
+      </div>
+      <div class="tip-card">
+        <span class="tip-icon">&#127912;</span>
+        <div>
+          <strong>Graceful Loading:</strong> Implement UI Skeletons early so the interface never looks broken while fetching doctor schedules or appointments.
+        </div>
+      </div>
+      <div class="tip-card">
+        <span class="tip-icon">&#128194;</span>
+        <div>
+          <strong>Project Structure:</strong> Maintain clear separation of Custom Hooks for Axios, Global States for Auth, and UI components.
+        </div>
+      </div>
+
+      <div
+        style="
+          text-align: center;
+          padding: 40px 0 0;
+          color: var(--text);
+          font-size: 0.95rem;
+        ">
+        <strong style="color: var(--primary); font-size: 1.1rem"
+          >Good Luck! Hassan ELDash💖</strong
+        >
+      </div>
+    </div>
+  </body>
+</html>
